@@ -22,14 +22,13 @@ public class HiveInsert {
     public String getHiveSQLQueryLocal() {
         StringBuffer sql = new StringBuffer();
         sql.append("INSERT INTO w205_final.current_weather_local ");
-        sql.append("(id, city_id, city_name, dt, station_name,");
+        sql.append("(city_id, city_name, dt, station_name,");
         sql.append("coord_lon, coord_lat,");
         sql.append("temp, temp_min, temp_max, humidity, pressure, wind_speed, wind_gust, wind_degree,");
         sql.append("rain1h, rain3h,pct_cloud, sunrise, sunset,");
         sql.append("weather_name, weather_description, weather_icon, weather_code,");
         sql.append("retrieval_date, hour, file_name) ");
         sql.append(", (");
-        sql.append("1, ");
         sql.append("32, ");
         sql.append("'testCity'" + ", ");
         sql.append("timestamp '2016-06-27 07:21:27'" + ", ");
@@ -63,7 +62,6 @@ public class HiveInsert {
         StringBuffer sql = new StringBuffer();
         sql.append("INSERT INTO w205_final.current_weather ");
         sql.append("VALUES (");
-        sql.append("1, ");
         sql.append("32, ");
         sql.append("'testCity'" + ", ");
         sql.append("timestamp '2016-06-27 07:21:27'" + ", ");
