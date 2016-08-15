@@ -16,6 +16,9 @@ Here are descriptions of the folder name endings used:
   - _Scripts: Includes scripts that were used to initialize or configure the system
   - _Attempt: Includes archived code that was not used in the production system (Used for evaluating the system build-out)
   - _Production: Includes the production code that is executable on the configured system
+  - _Analysis: Includes the code used to model the data in preparation for visualization through Tableau
+
+Additional information about the contents of each folder can be found in the README file in the folders.
 
 ### Architecture
 The Weather Evaluator was configured to run on AWS EMR (emr-4.7.1) using the Presto-Sandbox (0.147) configuration.
@@ -28,11 +31,19 @@ throughput expected is 3 files per second, perfectly manageable by a single Kafk
 Storm was configured as a cluster of 4 EC2 instances: 1 Nimbus node, 1 Zookeeper node, and 2 Supervisor nodes. However, the EMR instance also has storm configured for running the topology in local mode.
 
 ### Instructions
+Streaming:
 1. Log into the master node of the configured EMR instance.
 
 2. Execute the pipeline initialization .jar. This executable drops all weather data (in json format) from S3 archive onto a Kafka topic. The Storm topology is already running and waiting to process incoming files. This execution performs a replay of all captured data. A pattern that is essential to managing a streaming pipeline built on the Kappa architecture fundamentals. 
 
 ```sh
-$ cd ~/apache-storm-1.0.1/bin/
-$ storm jar ~/storm-starter-1.0.2.jar org.apache.storm.starter.WeatherEvaluatorTopology
+$ cd ~
+$ java -jar initiate-stream.jar
+```
+
+Batch:
+1. The batch processing can be executed from any machine. The executable is already compiled and included in the Batch_Production folder of this repository. 
+
+```sh
+$ java -jar ~/mids-205-weather-assistant/Batch_Production/run-current-barch.jar
 ```

@@ -1,0 +1,1 @@
+These SQL scripts are primarily the DDL used to provision the Postgres metadata tables and the external (S3 based) Hive tables for production data.

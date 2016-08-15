@@ -1,0 +1,1 @@
+This code was used to verify that the Kafka topics were configured correctly and that the code to act as a producer to the Kafka topic was working.
