@@ -42,7 +42,7 @@ Streaming:
 2. Execute the pipeline initialization .jar. This executable drops all weather data (in json format) from S3 archive onto a Kafka topic. This execution performs a replay of all captured data. A pattern that is essential to managing a streaming pipeline built on the Kappa architecture fundamentals. 
 
 ```sh
-$ cd ~
+$ cd ~/mids-205-weather-assistant/Stream_Production/
 $ java -jar initiate-stream.jar
 ```
 
@@ -50,5 +50,6 @@ Batch:
 1. The batch processing can be executed from any machine. The executable is already compiled and included in the Batch_Production folder of this repository. 
 
 ```sh
-$ java -jar ~/mids-205-weather-assistant/Batch_Production/run-current-barch.jar
+$cd ~/mids-205-weather-assistant/Batch_Production/
+$ java -jar initiate-batch.jar
 ```
