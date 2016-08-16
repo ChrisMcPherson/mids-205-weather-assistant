@@ -1,4 +1,4 @@
-Java files in this folder were used for pulling weather data and storing the same in Amazon S3.
+Java files in this folder were used for pulling weather data from the OpenWeather API and storing in an archive in Amazon S3.
 
 Execution Steps:
 

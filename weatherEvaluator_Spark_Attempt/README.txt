@@ -1,1 +1,1 @@
-This code was used during the planning phase of our project to evaluate whether to use Spark-Streaming or Storm for stream processing.
+This code was used during the planning phase of our project to evaluate whether to use Spark-Streaming or Storm for stream processing. It is kept here for project evaluation as proof of the extent of our planning efforts.

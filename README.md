@@ -4,7 +4,7 @@ The Weather Assistant provides weather forecast scores for over 70,000 cities ac
 be categorized into the following sections:
 
   - Stream and archive weather forecasts and current weather conditions for 70,000
-  - Deserialize, Transform, and enhance the weather data stream using the Kafka messaging queue and Strom processing engine
+  - Deserialize, Transform, and enhance the weather data stream using the Kafka messaging queue and Strom processing engine (a working Batch processing version in also included)
   - Store data in Hive and query using Presto "speed of thought" query engine
   - Score cities on forecasting accuracy and visualize using Tableau
 
@@ -28,13 +28,18 @@ AWS S3 was configured as the EMRFS (alternative to locally configured HDFS) for 
 Kafka was installed directly onto the EMR instance in a single node configuration. The highest
 throughput expected is 3 files per second, perfectly manageable by a single Kafka Node.
 
-Storm was configured as a cluster of 4 EC2 instances: 1 Nimbus node, 1 Zookeeper node, and 2 Supervisor nodes. However, the EMR instance also has storm configured for running the topology in local mode.
+Storm was configured as a cluster of 4 EC2 instances: 1 Nimbus node, 1 Zookeeper node, and 2 Supervisor nodes. Howevever, we experienced system configuration issues with the Zookeeper node
+and wrote an alternative batch processing version. The Storm cluster and topology was kept in place to show our efforts and ability to manage the project and arrive at a working solution in the face of major challenges.
 
 ### Instructions
+
+API Data Pull:
+Instructions are included in the README file of the Data_Retrieval_Production folder of this repository
+
 Streaming:
 1. Log into the master node of the configured EMR instance.
 
-2. Execute the pipeline initialization .jar. This executable drops all weather data (in json format) from S3 archive onto a Kafka topic. The Storm topology is already running and waiting to process incoming files. This execution performs a replay of all captured data. A pattern that is essential to managing a streaming pipeline built on the Kappa architecture fundamentals. 
+2. Execute the pipeline initialization .jar. This executable drops all weather data (in json format) from S3 archive onto a Kafka topic. This execution performs a replay of all captured data. A pattern that is essential to managing a streaming pipeline built on the Kappa architecture fundamentals. 
 
 ```sh
 $ cd ~
