@@ -10,7 +10,11 @@ Following are the steps for executing the code base.
 
 3. Copy code and data directories under weather folder
 
-4. Change directory to code 
+4. Change /weather director permission to 744 (chmod -R 744 /weather).
+
+5. Make /weather/code/run_weather.sh executable (chmod +x run_weather.sh)
+
+5. Change directory to /weather/code 
 
 5. Run run_weather.sh
 
