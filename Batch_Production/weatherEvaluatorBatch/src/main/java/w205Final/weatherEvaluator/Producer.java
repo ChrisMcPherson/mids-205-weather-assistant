@@ -88,7 +88,6 @@ public class Producer {
 					if (key.contains("currrent-weather")) {
 						CurrentWeather data = new CurrentWeather(new JSONObject(json));
 						sql = data.getSQLQuery(date, hour, key);
-						continue;
 					} else {
 						DailyForecast data = new DailyForecast(new JSONObject(json));
 						sql = data.getFlattenedSQLQuery(date, hour, key);
