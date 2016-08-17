@@ -17,14 +17,16 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.log4j.Logger;
-import org.json.JSONObject;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class ZoneWeather {
 	private final static Logger logger = Logger.getLogger(ZoneWeather.class);
 
 	private List<String> errorLog = new ArrayList();		
 	private int processCount = 0;
+	private int errorCount = 0;
 	
 	private String processingFolderName;
 
@@ -57,7 +59,7 @@ public class ZoneWeather {
 	}
 	
 	public int getErrorCount() {
-		return errorLog.size();
+		return errorCount;
 	}
 
 	private List<String> loadCities(int zoneId) throws Exception {
@@ -86,7 +88,7 @@ public class ZoneWeather {
 		return cityList;
 	}
 
-	private void fetchData(List<String> cities, String partialUrl, String tagName) throws Exception {
+	private void fetchData(List<String> cities, String partialUrl, String partialName) throws Exception {
 		BufferedWriter bw = null;
 		String fileName = "";
 		String url = "";
@@ -94,24 +96,15 @@ public class ZoneWeather {
 			for(String city: cities) {
 				logger.debug("Pulling data for City Id: "+city);
 				url = partialUrl + city+ "&APPID="+Weather.OPEN_WEATHER_API_KEY;
-				String response = callAPI(url, city, tagName, 1);
-				
-				//try second time
-				if(isErrorResponse(response)) {
-					//Thread.currentThread().sleep(20);
-					response = callAPI(url, city, tagName, 2);
-
-					if(isErrorResponse(response)) {
-						logger.debug("Failed to process city "+city+", URL-"+url);
-						logger.debug("Response "+response);
-						String error = "Failed to process city Id: "+ city +"; Type: "+ tagName + "; Request URL: "+url+"; Response: "+response;
-						errorLog.add(error);
-						continue;
-					}
+				String response = callAPI(url, city, partialName);
+				//if 502 Bad Gateway
+				if(response.contains("502 Bad Gateway")) {
+					Thread.currentThread().wait(100);
+					response = callAPI(url, city, partialName);
 				}
 				SimpleDateFormat sdf = new SimpleDateFormat("HH-mm-ss");
 				Date date = new Date();
-				fileName = Weather.WORKING_DIRECTORY+processingFolderName+"/"+city+"-"+tagName +"-" + sdf.format(date)+".json";
+				fileName = Weather.WORKING_DIRECTORY+processingFolderName+"/"+city+"-"+partialName +"-" + sdf.format(date)+".json";
 				File file = new File(fileName);
 				if (!file.exists()) {
 					file.createNewFile();
@@ -137,7 +130,7 @@ public class ZoneWeather {
 		}
 	}
 
-	private String callAPI(String url, String city, String tagName, int retryCount) throws Exception {
+	private String callAPI(String url, String city, String tagName) throws Exception {
 		String responseData = "";
 		CloseableHttpClient client = HttpClients.createDefault();
 		try {
@@ -148,10 +141,18 @@ public class ZoneWeather {
 			while((inputLine = rd.readLine()) != null)	{
 				responseData += inputLine;
 			}
-			return responseData;
+			JsonParser jsonParser = new JsonParser();		    
+			JsonObject jsonObject = (JsonObject)jsonParser.parse(responseData.toString());
+			String errorCode = jsonObject.get("cod").toString().replace("\"", "");
+			if(Integer.parseInt(errorCode.trim()) != 200) {
+				String error = "Failed to process city Id: "+ city +"; Type: "+ tagName + "; Request URL: "+url+"; Response: "+responseData;
+				errorLog.add(error);
+			}
 		} catch(Exception ex) {
-			logger.error(ex, ex);
-			return responseData;
+			logger.debug("Failed to process city "+city+", URL-"+url);
+			logger.debug("Response "+responseData);
+			String error = "Failed to process city Id: "+ city +"; Type: "+ tagName + "; Request URL: "+url+"; Response: "+responseData;
+			errorLog.add(error);
 		} finally {
 			try {
 				if (client != null) {
@@ -161,25 +162,6 @@ public class ZoneWeather {
 				// do nothing
 			}
 		}
-	}
-	
-	public static boolean isErrorResponse(String responseData) {
-		if(responseData == null || responseData.equals("")) {
-			return true;
-		}
-		if(responseData.contains("Bad Gateway")) {
-			return true;
-		}
-		try {
-			JSONObject jsonObject = new JSONObject(responseData.toString());
-			String errorCode = jsonObject.get("cod").toString().replace("\"", "");
-			if(Integer.parseInt(errorCode.trim()) == 200) {
-				return false;
-			}
-		} catch(Exception e) {
-			logger.error(e, e);
-			//invalid JSON means error
-		}
-		return true;
+		return responseData;
 	}
 }

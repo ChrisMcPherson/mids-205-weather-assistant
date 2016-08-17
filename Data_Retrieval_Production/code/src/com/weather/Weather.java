@@ -13,7 +13,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-
 public class Weather {
 
 	public static String WORKING_DIRECTORY = PropertiesUtil.getProperty("WORKING_DIRECTORY");
@@ -59,17 +58,17 @@ public class Weather {
 			awsUtil.transferFilesToS3(WORKING_DIRECTORY, processingDate, ""+processingHour, S3_BUCKET_NAME);
 
 			//write to kafka
+			boolean kafkaWriteStatus = false;
 			KafkaClient kafkaClient = new KafkaClient();
 			kafkaClient.writeToKafkaQueue(WORKING_DIRECTORY + processingDate+"-"+processingHour);
 
-			MailUtil.sendApplicationAlert(currentWeatherLog, forecastWeatherLog, awsUtil, kafkaClient, processingHour);
+			MailUtil.sendApplicationAlert(currentWeatherLog, forecastWeatherLog, awsUtil, kafkaClient);
 			
 			logger.debug("Process completed");
-			System.exit(0);
+			
 		} catch(Exception ex) {				
 			logger.error(ex, ex);
 			MailUtil.sendApplicationAlert("Eror while processing data for "+processingDate+" and "+processingHour, ex);
-			System.exit(0);
 		}		
 	}
 		

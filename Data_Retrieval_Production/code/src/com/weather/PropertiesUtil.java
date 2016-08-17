@@ -16,8 +16,8 @@ public class PropertiesUtil {
 		Properties prop = new Properties();
 		try {
 			InputStream input = null;
-			String contentBuilderPath = System.getProperty("user.dir")+"/resources/weather.properties";
-			//String contentBuilderPath = "/weather/code/resources/weather.properties";
+			//String contentBuilderPath = System.getProperty("user.dir")+"/resources/weather.properties";
+			String contentBuilderPath = "/weather/code/resources/weather.properties";
 			input = new FileInputStream(contentBuilderPath);
 	    	prop.load(input);	    		
 		} catch (Exception ex) {
