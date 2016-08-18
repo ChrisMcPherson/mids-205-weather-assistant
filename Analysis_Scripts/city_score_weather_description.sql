@@ -9,7 +9,7 @@ SELECT
   CASE WHEN weather_description_1 LIKE weather_description_5 THEN 1 ELSE 0 END AS weather_description_5_match,
   CASE WHEN weather_description_1 LIKE weather_description_6 THEN 1 ELSE 0 END AS weather_description_6_match,
   CASE WHEN weather_description_1 LIKE weather_description_7 THEN 1 ELSE 0 END AS weather_description_7_match
-FROM forecast_weather_flat
+FROM forecast_weather_flat_stream
 GROUP BY 1,2,3,4,5,6,7,8;
 
 DROP TABLE IF EXISTS city_score_weather_description;

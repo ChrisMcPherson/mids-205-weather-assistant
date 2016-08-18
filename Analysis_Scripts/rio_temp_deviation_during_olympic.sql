@@ -21,7 +21,7 @@ FROM
     (day_temp_5 - day_temp_1)^2 AS delta_5_1,
     (day_temp_6 - day_temp_1)^2 AS delta_6_1,
     (day_temp_7 - day_temp_1)^2 AS delta_7_1
-  FROM forecast_weather_flat
+  FROM forecast_weather_flat_stream
   WHERE
     country_code = 'BR'
     AND city_name = 'Rio de Janeiro'

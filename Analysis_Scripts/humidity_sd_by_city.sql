@@ -13,7 +13,7 @@ select
   (humidity_5 - humidity_1) AS delta_5_1,
   (humidity_6 - humidity_1) AS delta_6_1,
   (humidity_7 - humidity_1) AS delta_7_1
-from forecast_weather_flat
+from forecast_weather_flat_stream
 group by 1,2,3,4, humidity_1, humidity_2, humidity_3, humidity_4, humidity_5, humidity_6, humidity_7
 order by city_id;
 

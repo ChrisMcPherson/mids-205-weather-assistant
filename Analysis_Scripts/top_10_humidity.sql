@@ -1,6 +1,6 @@
 SELECT
   city_name,
-  country_code,sd_2, sd_3, sd_4, sd_5, sd_6, sd_7,
+  country_code,
   (sd_2 + sd_3 + sd_4 + sd_5 + sd_6 + sd_7)/ 6.0 AS avg_sd
 FROM
   city_sd_humidity

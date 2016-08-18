@@ -2,7 +2,6 @@ SELECT
   d.city_id AS city_id,
   c.name AS city_name,
   c.country_code AS country_code,
-  score_2, score_3, score_4, score_5, score_6, score_7,
   (score_2 + score_3 + score_4 + score_5 + score_6 + score_7)/ 6.0 AS avg_score
 FROM
   city_score_weather_description AS d
